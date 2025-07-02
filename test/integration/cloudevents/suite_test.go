@@ -3,12 +3,13 @@ package cloudevents
 import (
 	"context"
 	"fmt"
-	"open-cluster-management.io/sdk-go/pkg/cloudevents/clients/options"
 	"os"
 	"path"
 	"path/filepath"
 	"testing"
 	"time"
+
+	"open-cluster-management.io/sdk-go/pkg/cloudevents/clients/options"
 
 	mochimqtt "github.com/mochi-mqtt/server/v2"
 	"github.com/mochi-mqtt/server/v2/hooks/auth"
@@ -231,7 +232,7 @@ func (t *testAddon) GetAgentAddonOptions() agent.AgentAddonOptions {
 
 	if len(t.registrations) > 0 {
 		option.Registration = &agent.RegistrationOption{
-			CSRConfigurations: func(cluster *clusterv1.ManagedCluster) []addonapiv1alpha1.RegistrationConfig {
+			Configurations: func(cluster *clusterv1.ManagedCluster) []addonapiv1alpha1.RegistrationConfig {
 				return t.registrations[cluster.Name]
 			},
 			CSRApproveCheck: func(cluster *clusterv1.ManagedCluster, addon *addonapiv1alpha1.ManagedClusterAddOn, csr *certificatesv1.CertificateSigningRequest) bool {

@@ -56,7 +56,10 @@ var _ = ginkgo.Describe("Addon CSR", func() {
 
 		testAddonImpl.registrations[managedClusterName] = []addonapiv1alpha1.RegistrationConfig{
 			{
-				SignerName: certificatesv1.KubeAPIServerClientSignerName,
+				Type: addonapiv1alpha1.RegistrationAuthTypeCsr,
+				CSR: &addonapiv1alpha1.CsrRegistrationConfig{
+					SignerName: certificatesv1.KubeAPIServerClientSignerName,
+				},
 			},
 		}
 

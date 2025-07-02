@@ -68,7 +68,10 @@ var _ = ginkgo.Describe("Addon Registration", func() {
 	ginkgo.It("Should setup registration successfully", func() {
 		testAddonImpl.registrations[managedClusterName] = []addonapiv1alpha1.RegistrationConfig{
 			{
-				SignerName: certificatesv1.KubeAPIServerClientSignerName,
+				Type: "csr",
+				CSR: &addonapiv1alpha1.CsrRegistrationConfig{
+					SignerName: certificatesv1.KubeAPIServerClientSignerName,
+				},
 			},
 		}
 
@@ -97,10 +100,16 @@ var _ = ginkgo.Describe("Addon Registration", func() {
 	ginkgo.It("Should update registration successfully", func() {
 		testAddonImpl.registrations[managedClusterName] = []addonapiv1alpha1.RegistrationConfig{
 			{
-				SignerName: certificatesv1.KubeAPIServerClientSignerName,
+				Type: "csr",
+				CSR: &addonapiv1alpha1.CsrRegistrationConfig{
+					SignerName: certificatesv1.KubeAPIServerClientSignerName,
+				},
 			},
 			{
-				SignerName: "open-cluster-management.io/test-signer",
+				Type: "csr",
+				CSR: &addonapiv1alpha1.CsrRegistrationConfig{
+					SignerName: "open-cluster-management.io/test-signer",
+				},
 			},
 		}
 
@@ -122,7 +131,10 @@ var _ = ginkgo.Describe("Addon Registration", func() {
 			actual.Status = addonapiv1alpha1.ManagedClusterAddOnStatus{
 				Registrations: []addonapiv1alpha1.RegistrationConfig{
 					{
-						SignerName: certificatesv1.KubeAPIServerClientSignerName,
+						Type: "csr",
+						CSR: &addonapiv1alpha1.CsrRegistrationConfig{
+							SignerName: certificatesv1.KubeAPIServerClientSignerName,
+						},
 					},
 				},
 				Conditions: []metav1.Condition{},

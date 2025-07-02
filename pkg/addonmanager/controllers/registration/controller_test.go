@@ -42,7 +42,7 @@ func (t *testAgent) GetAgentAddonOptions() agent.AgentAddonOptions {
 	agentOption := agent.AgentAddonOptions{
 		AddonName: t.name,
 		Registration: &agent.RegistrationOption{
-			CSRConfigurations: func(cluster *clusterv1.ManagedCluster) []addonapiv1alpha1.RegistrationConfig {
+			Configurations: func(cluster *clusterv1.ManagedCluster) []addonapiv1alpha1.RegistrationConfig {
 				return t.registrations
 			},
 			PermissionConfig: func(cluster *clusterv1.ManagedCluster, addon *addonapiv1alpha1.ManagedClusterAddOn) error {
@@ -110,7 +110,10 @@ func TestReconcile(t *testing.T) {
 			},
 			testaddon: &testAgent{name: "test", namespace: "default", registrations: []addonapiv1alpha1.RegistrationConfig{
 				{
-					SignerName: "test",
+					Type: addonapiv1alpha1.RegistrationAuthTypeCsr,
+					CSR: &addonapiv1alpha1.CsrRegistrationConfig{
+						SignerName: "test",
+					},
 				},
 			}},
 			validateAddonActions: addontesting.AssertNoActions,
@@ -135,7 +138,7 @@ func TestReconcile(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				if addOn.Status.Registrations[0].SignerName != "test" {
+				if addOn.Status.Registrations[0].CSR == nil || addOn.Status.Registrations[0].CSR.SignerName != "test" {
 					t.Errorf("Registration config is not updated")
 				}
 				if addOn.Status.Namespace != "default" {
@@ -144,7 +147,10 @@ func TestReconcile(t *testing.T) {
 			},
 			testaddon: &testAgent{name: "test", namespace: "default", registrations: []addonapiv1alpha1.RegistrationConfig{
 				{
-					SignerName: "test",
+					Type: addonapiv1alpha1.RegistrationAuthTypeCsr,
+					CSR: &addonapiv1alpha1.CsrRegistrationConfig{
+						SignerName: "test",
+					},
 				},
 			}},
 		},
@@ -169,7 +175,7 @@ func TestReconcile(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				if addOn.Status.Registrations[0].SignerName != "test" {
+				if addOn.Status.Registrations[0].CSR == nil || addOn.Status.Registrations[0].CSR.SignerName != "test" {
 					t.Errorf("Registration config is not updated")
 				}
 				if addOn.Status.Namespace != "default2" {
@@ -178,7 +184,10 @@ func TestReconcile(t *testing.T) {
 			},
 			testaddon: &testAgent{name: "test", namespace: "default", registrations: []addonapiv1alpha1.RegistrationConfig{
 				{
-					SignerName: "test",
+					Type: addonapiv1alpha1.RegistrationAuthTypeCsr,
+					CSR: &addonapiv1alpha1.CsrRegistrationConfig{
+						SignerName: "test",
+					},
 				},
 			}},
 		},
@@ -203,7 +212,7 @@ func TestReconcile(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				if addOn.Status.Registrations[0].SignerName != "test" {
+				if addOn.Status.Registrations[0].CSR == nil || addOn.Status.Registrations[0].CSR.SignerName != "test" {
 					t.Errorf("Registration config is not updated")
 				}
 				if addOn.Status.Namespace != "default3" {
@@ -211,7 +220,14 @@ func TestReconcile(t *testing.T) {
 				}
 			},
 			testaddon: &testAgent{name: "test", namespace: "default",
-				registrations: []addonapiv1alpha1.RegistrationConfig{{SignerName: "test"}},
+				registrations: []addonapiv1alpha1.RegistrationConfig{
+					{
+						Type: addonapiv1alpha1.RegistrationAuthTypeCsr,
+						CSR: &addonapiv1alpha1.CsrRegistrationConfig{
+							SignerName: "test",
+						},
+					},
+				},
 				agentInstallNamespace: func(addon *addonapiv1alpha1.ManagedClusterAddOn) (string, error) {
 					return "default3", nil
 				},

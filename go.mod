@@ -2,6 +2,9 @@ module open-cluster-management.io/addon-framework
 
 go 1.23.6
 
+// TODO: Remove before merging
+replace open-cluster-management.io/api => /home/bhperry/go/src/open-cluster-management.io/api
+
 require (
 	github.com/evanphx/json-patch v5.9.0+incompatible
 	github.com/fatih/structs v1.1.0

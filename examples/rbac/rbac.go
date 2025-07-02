@@ -49,6 +49,16 @@ func AddonRBAC(kubeConfig *rest.Config) agent.PermissionConfigFunc {
 			},
 		}
 
+		switch agent.GetRegistrationAuthType(cluster) {
+		case addonapiv1alpha1.RegistrationAuthTypeAwsIrsa:
+			awsGroups := agent.DefaultAwsRbacGroups(cluster.Name, addon.Name)
+			for _, group := range awsGroups {
+				binding.Subjects = append(binding.Subjects, rbacv1.Subject{
+					Kind: rbacv1.GroupKind, APIGroup: rbacv1.GroupName, Name: group,
+				})
+			}
+		}
+
 		_, err = kubeclient.RbacV1().Roles(cluster.Name).Get(context.TODO(), role.Name, metav1.GetOptions{})
 		switch {
 		case errors.IsNotFound(err):
